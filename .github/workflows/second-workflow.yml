@@ -12,7 +12,7 @@ jobs:
       - name: 'Download artifact'
         uses: actions/download-artifact@v5
         with:
-          run-id: '${{ github.event.workflow_run.workflow.id }}'
+          run-id: '${{ github.event.workflow_run.workflow_id }}'
           name: pr_number
           path: pr
 
