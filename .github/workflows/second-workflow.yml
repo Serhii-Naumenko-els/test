@@ -12,7 +12,7 @@ jobs:
       - name: 'Download artifact'
         uses: actions/download-artifact@v5
         with:
-          run-id: '${{ workflow_run.id }}'
+          run-id: '${{ github.event.workflow_run.workflow.id }}'
           path: /pr
 
       - name: 'Comment on PR'
