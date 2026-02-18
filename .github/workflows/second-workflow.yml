@@ -1,0 +1,32 @@
+name: second-workflow.yml
+on:
+  workflow_run:
+    workflows: [first-workflow]
+    types:
+      - completed
+
+jobs:
+  download-test-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Download artifact'
+        uses: actions/download-artifact@v5
+        with:
+          run-id: '${{ workflow_run.id }}'
+          path: /pr
+
+      - name: 'Comment on PR'
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const prNumberPath = '/pr/pr_number';
+            const issue_number = Number(fs.readFileSync(prNumberPath, 'utf8').toString().trim());
+            await github.rest.issues.createComment({
+              owner: '${{ github.repository_owner }}',
+              repo: '${{ github.repository }}',
+              issue_number,
+              body: 'Thank you for the PR!'
+            });
